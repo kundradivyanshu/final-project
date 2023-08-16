@@ -188,7 +188,7 @@ p {
   justify-content: space-between;
   text-align: center;
   display: flex;
-  flex-direction: column;+
+  flex-direction: column;
 }
 
 #monday, #tuesday, #wednesday, #thursday, #friday{

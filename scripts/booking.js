@@ -1,87 +1,77 @@
 /********* create variables *********/
-// useful variables might be: the cost per day, the number of days selected, and elements on the screen that will be clicked or will need to be modified. 
-// Do any of these variables need to be initialized when the page is loaded? 
-// When do they need to be reset or updated?
-
-let fullCost = 35;
-let halfCost = 20;
-let daysSelected = [];
-let daysSelectedElements = document.querySelectorAll('.day-selector li');
-let fullDayButton = document.getElementById('full');
-let halfDayButton = document.getElementById('half');
-let clearDayButton = document.getElementById('clear-button');
-let modifiedCost = document.getElementById('calculated-cost');
-
-
+// Define cost values and other elements/variables needed for interaction
+let Full_cost = 35;
+let Half_cost = 20;
+let SelectedDays = []; // Array to store selected days
+let daysSelectedElements = document.querySelectorAll('.day-selector li'); // Get all day elements
+let Full_Button = document.getElementById('full'); // Full-day button element
+let Half_Button = document.getElementById('half'); // Half-day button element
+let Button_clear = document.getElementById('clear-button'); // Clear button element
+let Cost_New = document.getElementById('calculated-cost'); // Element to display calculated cost
 
 /********* colour change days of week *********/
-// when the day buttons are clicked, we will apply the "clicked" class to that element, and update any other relevant variables. Then, we can recalculate the total cost.
-// added challenge: don't update the dayCounter if the same day is clicked more than once. hint: .classList.contains() might be helpful here!
-
+// Creating a function to handle color change of selected days
 function changeColour(event) {
   let selectDay = event.target;
-  if (!daysSelected.includes(selectDay.id)) {
-    daysSelected.push(selectDay.id);
+  
+  // If the day is not already selected, adding to SelectedDays and apply 'clicked' class
+  if (!SelectedDays.includes(selectDay.id)) {
+    SelectedDays.push(selectDay.id);
     selectDay.classList.add('clicked');
-  } else {
-    let dayIndex = daysSelected.indexOf(selectDay.id);
-    daysSelected.splice(dayIndex, 1);
+  } else { // Remove from SelectedDays and remove 'clicked' class,If the day is already selected,
+    let dayIndex = SelectedDays.indexOf(selectDay.id);
+    SelectedDays.splice(dayIndex, 1);
     selectDay.classList.remove('clicked');
   }
-  calculateCost();
+  
+  calculateCost(); // Calculating the total cost
 }
 
+// Attaching the changeColour function to element's click event
 daysSelectedElements.forEach(function(dayElement) {
   dayElement.addEventListener('click', changeColour);
 });
 
-
-
 /********* clear days *********/
-// when the clear-button is clicked, the "clicked" class is removed from all days, any other relevant variables are reset, and the calculated cost is set to 0.
-
-clearDayButton.addEventListener('click', function() {
-  daysSelected = [];
+Button_clear.addEventListener('click', function() {
+  SelectedDays = []; // Clear the selected days array
   daysSelectedElements.forEach(function(dayElement) {
-    dayElement.classList.remove('clicked');
+    dayElement.classList.remove('clicked'); // Remove 'clicked' class from all day elements
   });
-  fullDayButton.classList.add('clicked');
-  halfDayButton.classList.remove('clicked');
-  calculateCost();
+  Full_Button.classList.add('clicked'); // Set Full_Button as clicked
+  Half_Button.classList.remove('clicked'); // Remove clicked class from Half_Button
+  calculateCost(); // Recalculate the total cost
 });
 
-
 /********* change rate *********/
-// when the half-day button is clicked, set the daily rate to $20, add the "clicked" class to the "half" element, remove it from the "full" element, and recalculate the total cost.
-// when the full-day button is clicked, the daily rate is set back to $35, the clicked class is added to "full" and removed from "half", and the total cost is recalculated.
-
+// Function to handle changing the rate (full or half day)
 function changeRate(dayType) {
   if (dayType === 'half') {
-    halfDayButton.classList.add('clicked');
-    fullDayButton.classList.remove('clicked');
+    Half_Button.classList.add('clicked'); // Set Half_Button as clicked
+    Full_Button.classList.remove('clicked'); // Remove clicked class from Full_Button
   } else {
-    fullDayButton.classList.add('clicked');
-    halfDayButton.classList.remove('clicked');
+    Full_Button.classList.add('clicked'); // Set Full_Button as clicked
+    Half_Button.classList.remove('clicked'); // Remove clicked class from Half_Button
   }
-  calculateCost();
+  
+  calculateCost(); //
 }
 
-fullDayButton.addEventListener('click', function() {
+// Attach the changeRate function to Full_Button's click event
+Full_Button.addEventListener('click', function() {
   changeRate('full');
 });
 
-halfDayButton.addEventListener('click', function() {
+// Attach the changeRate function to Half_Button's click event
+Half_Button.addEventListener('click', function() {
   changeRate('half');
 });
 
-
-
 /********* calculate *********/
-// when a calculation is needed, set the innerHTML of the calculated-cost element to the appropriate value
-
+// Function to calculate and update the displayed cost
 function calculateCost() {
-  let days = daysSelected.length;
-  let cost = fullDayButton.classList.contains('clicked') ? fullCost : halfCost;
-  let totalCost = days * cost;
-  modifiedCost.innerHTML = totalCost;
+  let days = SelectedDays.length; // Get the number of selected days
+  let cost = Full_Button.classList.contains('clicked') ? Full_cost : Half_cost; // Get the cost based on button state
+  let totalCost = days * cost; // Calculate total cost
+  Cost_New.innerHTML = totalCost; // Update the displayed cost
 }
